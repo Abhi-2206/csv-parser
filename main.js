@@ -7,7 +7,9 @@ function csvParser() {
 
     const data = fs.readFileSync(filePath, 'utf-8')
 
-    console.log(data)
+    const splitData = data.split('\n')
+
+    console.log(splitData)
 }
 
 csvParser()
