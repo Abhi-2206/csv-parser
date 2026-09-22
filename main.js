@@ -7,9 +7,15 @@ function csvParser() {
 
     const data = fs.readFileSync(filePath, 'utf-8')
 
-    const splitData = data.split('\n')
+    let splitData = data.split('\n')
 
-    console.log(splitData)
+    let parsedData = []
+
+    for (let row of splitData) {
+        parsedData.push(row.split(','))
+    }
+
+    console.log(parsedData)
 }
 
 csvParser()
