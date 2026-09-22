@@ -7,15 +7,42 @@ function csvParser() {
 
     const data = fs.readFileSync(filePath, 'utf-8')
 
+    function parseRow(row) {
+        let result = []
+        let currentValue = ""
+        let insideQuotes = false
+
+        for (let i = 0; i < row.length; i++) {
+            let char = row[i]
+
+            if (char === '"') {
+                insideQuotes = !insideQuotes
+            }
+            else if (char === ',' && !insideQuotes) {
+                result.push(currentValue)
+                currentValue = ""
+            }
+            else {
+                currentValue += char
+            }
+        }
+
+        result.push(currentValue)
+
+        return result
+    }
+
     let splitData = data.split('\n')
 
     let parsedData = []
 
     for (let row of splitData) {
-        parsedData.push(row.split(','))
+        parsedData.push(parseRow(row))
     }
 
-    const header = parsedData.shift()
+    const header = parsedData[0]
+
+    parsedData.shift()
 
     let finalData = []
 
@@ -29,7 +56,7 @@ function csvParser() {
         finalData.push(obj)
     }
 
-    console.log(finalData)
+    return finalData
 }
 
-csvParser()
+console.log(csvParser())
