@@ -15,7 +15,21 @@ function csvParser() {
         parsedData.push(row.split(','))
     }
 
-    console.log(parsedData)
+    const header = parsedData.shift()
+
+    let finalData = []
+
+    for (let i = 0; i < parsedData.length; i++) {
+        let obj = {}
+
+        for (let j = 0; j < header.length; j++) {
+            obj[header[j]] = parsedData[i][j]
+        }
+
+        finalData.push(obj)
+    }
+
+    console.log(finalData)
 }
 
 csvParser()
