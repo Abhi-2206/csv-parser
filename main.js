@@ -1,1 +1,5 @@
-console.log("csv-parser")
+function csvParser() {
+    console.log("CSV Parser");
+}
+
+csvParser();
