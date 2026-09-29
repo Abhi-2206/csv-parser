@@ -1,56 +1,55 @@
 const fs = require("fs");
-const path = require("path");
 
 async function csvParser(filePath) {
-  
+
   const fileSize = (await fs.promises.stat(filePath)).size;
-  console.log(fileSize)
-  
+
+
   if (fileSize >= 100 * 1024 * 1024) {
 
     return new Promise((res,rej)=>{
-      
+
       let buffer = ""
       let header = null
       let finalData = []
-  
+
       const stream = fs.createReadStream(filePath,'utf-8')
       stream.on('data',(chunk)=>{
         buffer+=chunk
-  
+
         let rows = buffer.split('\n')
         buffer = rows.pop()
-  
+
         for(let row of rows){
           let parsedRow = parseRow(row)
-  
+
           if(header === null){
             header = parsedRow
             continue
           }
-  
+
           let obj = {}
-  
+
           for(let j = 0;j<header.length;j++){
-  
+
             obj[header[j]] = parsedRow[j]
           }
           finalData.push(obj)
-  
+
         }
       })
-  
+
       stream.on('end',()=>{
         res(finalData)
       })
-      
+
       stream.on('error',(err)=>{
         rej(err)
       })
     })
 
-    
-    
+
+
   } else {
     const data = await fs.promises.readFile(filePath, "utf-8");
     let splitData = data.split("\n");
@@ -104,8 +103,5 @@ async function csvParser(filePath) {
   }
 }
 
-async function main() {
-  const data = await csvParser(path.join(__dirname, "large_test.csv"));
-  console.log(data);
-}
-main();
+
+module.exports = csvParser
